@@ -31,6 +31,17 @@ node dist/index.js
     "start": "npx tsc && node dist/index.js"
   }
 
+8. CORS
+npm i cors
+npm i --save-dev @types/cors
+npm i -D @types/cors
+
+9. 404 route = if doesn't match any of our endpoints
+and send back 404 errors
+
+10. Automating the server restart on VS code
+npm install -D nodemon
+npm run dev
 
 Docker 
 1. docker run hello-world

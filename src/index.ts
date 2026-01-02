@@ -36,15 +36,52 @@ CHALLENGE 4: Respond with some data!
 
 
 import express from 'express'
-import type { Express } from 'express'
+import type { Express, Request, Response} from 'express'
+import cors from 'cors'
+
 import {pets} from './data/pets'
+import type{Pet} from './data/pets'
 
 const PORT : number = 8000
 const app : Express = express()
 
+app.use(cors())
 
-app.get('/',(req,res) => {
+/*
+CHALLENGE: Figure out why `cors` is cors-ing an error...
+           and fix it!
+*/
+
+app.get('/',(req: Request,res: Response<Pet[]>): void => {
     res.json(pets)
+})
+
+
+/*
+CHALLENGE: Complete the `/:id` route!
+1. Type req, res, and callback's return value
+2. Pull the `id` from the path params
+3. Find the pet that matches said `id`
+4. Send back said pet with `res.json()`
+       
+Don't worry about non-existent IDs or other TypeScript yet
+*/
+app.get('/:id', (req:Request<{id:string}>, res:Response):void=>{
+  const {id} = req.params
+  const pet = pets.find(pet => pet.id.toString() === id)
+  res.json(pet)
+})
+
+/* 
+CHALLENGE: Create a 404 catch-all after the `/` route
+           Don’t forget to type annotate everything!
+           (there are 3 places)
+           
+HINT: In `hint.md`
+*/
+
+app.use((req:Request, res:Response<{message:string}>):void=>{
+  res.status(404).json({message: "No route found"})
 })
 
 app.listen(8000, (): void =>

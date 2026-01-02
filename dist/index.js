@@ -36,21 +36,41 @@ CHALLENGE 4: Respond with some data!
 4. Compile the TypeScript and run the resulting JavaScript to see it in action
 */
 const express_1 = __importDefault(require("express"));
+const cors_1 = __importDefault(require("cors"));
+const pets_1 = require("./data/pets");
 const PORT = 8000;
 const app = (0, express_1.default)();
-const pets = [{
-        name: "Rubik",
-        species: "Cat",
-        adopted: true,
-        age: 3
-    }, {
-        name: "cookie",
-        species: "dog",
-        adopted: true,
-        age: 2
-    }];
+app.use((0, cors_1.default)());
+/*
+CHALLENGE: Figure out why `cors` is cors-ing an error...
+           and fix it!
+*/
 app.get('/', (req, res) => {
-    res.json(pets);
+    res.json(pets_1.pets);
+});
+/*
+CHALLENGE: Complete the `/:id` route!
+1. Type req, res, and callback's return value
+2. Pull the `id` from the path params
+3. Find the pet that matches said `id`
+4. Send back said pet with `res.json()`
+       
+Don't worry about non-existent IDs or other TypeScript yet
+*/
+app.get('/:id', (req, res) => {
+    const { id } = req.params;
+    const pet = pets_1.pets.find(pet => pet.id.toString() === id);
+    res.json(pet);
+});
+/*
+CHALLENGE: Create a 404 catch-all after the `/` route
+           Don’t forget to type annotate everything!
+           (there are 3 places)
+           
+HINT: In `hint.md`
+*/
+app.use((req, res) => {
+    res.status(404).json({ message: "No route found" });
 });
 app.listen(8000, () => {
     console.log("listening on port: ", PORT);
