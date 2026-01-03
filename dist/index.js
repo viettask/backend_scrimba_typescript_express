@@ -42,14 +42,44 @@ const PORT = 8000;
 const app = (0, express_1.default)();
 app.use((0, cors_1.default)());
 /*
-CHALLENGE: Figure out why `cors` is cors-ing an error...
+CHALLENGE 5: Figure out why `cors` is cors-ing an error...
            and fix it!
 */
+/*
+CHALLENGE 8: Filter the pets by incoming species query and respond with the filtered list
+1. Grab the `species` query parameter
+2. Create a variable (and type it) to house filtered pets
+3. Filter the pets by said parameter (and type the callback)
+   (Make sure the strings you're comparing are lowercase!)
+4. Send filtered data back via `res.json()`
+
+Example API call: http://localhost:8000/&species=cat
+
+Don't worry about any additional TypeScript yet.
+You'll get an error if you try to run this. Don't worry, we'll handle it soon!
+*/
+/*
+CHALLENGE 9: Allow users to filter by the adopted property
+1. Updated `PetQueryParams`
+2. Grab the adopted param from req.query
+3. Filter the filteredPets array based on its value
+ 
+Keep in mind that query strings come in strings...
+but `adopted` should be a boolean... so, what can we do?
+*/
 app.get('/', (req, res) => {
-    res.json(pets_1.pets);
+    const { species, adopted } = req.query;
+    let filteredPets = pets_1.pets;
+    if (species) {
+        filteredPets = filteredPets.filter((pet) => pet.species.toLowerCase() === species.toLowerCase());
+    }
+    if (adopted) {
+        filteredPets = filteredPets.filter((pet) => pet.adopted === JSON.parse(adopted));
+    }
+    res.json(filteredPets);
 });
 /*
-CHALLENGE: Complete the `/:id` route!
+CHALLENGE 7: Complete the `/:id` route!
 1. Type req, res, and callback's return value
 2. Pull the `id` from the path params
 3. Find the pet that matches said `id`
@@ -59,11 +89,16 @@ Don't worry about non-existent IDs or other TypeScript yet
 */
 app.get('/:id', (req, res) => {
     const { id } = req.params;
-    const pet = pets_1.pets.find(pet => pet.id.toString() === id);
-    res.json(pet);
+    const pet = pets_1.pets.find((pet) => pet.id.toString() === id);
+    if (pet) {
+        res.json(pet);
+    }
+    else {
+        res.status(404).json({ message: "No pet with that ID" });
+    }
 });
 /*
-CHALLENGE: Create a 404 catch-all after the `/` route
+CHALLENGE 6 : Create a 404 catch-all after the `/` route
            Don’t forget to type annotate everything!
            (there are 3 places)
            
