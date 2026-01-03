@@ -43,6 +43,16 @@ and send back 404 errors
 npm install -D nodemon
 npm run dev
 
+11. Some middlewares:
+    express.static()
+    cors()
+
+    Middle features:
+    1. Check ID path parameter
+    2. Is it a number?
+    3. if not, return 400 with message
+    4. If number, call next()
+
 Docker 
 1. docker run hello-world
 2. docker run -p 8080:80 nginx

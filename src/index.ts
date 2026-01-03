@@ -39,88 +39,17 @@ import express from 'express'
 import type { Express, Request, Response } from 'express'
 import cors from 'cors'
 
-import { pets } from './data/pets'
-import type { Pet } from './data/pets'
+import {petRouter} from './routes/pets.routes'
+
+// import { pets } from './data/pets'
+// import type { Pet } from './data/pets'
 
 const PORT: number = 8000
 const app: Express = express()
 
 app.use(cors())
 
-type PetQueryParams = {
-    species?: string,
-    adopted?: 'true' | 'false'
-}
-/*
-CHALLENGE 5: Figure out why `cors` is cors-ing an error...
-           and fix it!
-*/
-
-/*
-CHALLENGE 8: Filter the pets by incoming species query and respond with the filtered list
-1. Grab the `species` query parameter
-2. Create a variable (and type it) to house filtered pets
-3. Filter the pets by said parameter (and type the callback)
-   (Make sure the strings you're comparing are lowercase!)
-4. Send filtered data back via `res.json()`
-
-Example API call: http://localhost:8000/&species=cat
-
-Don't worry about any additional TypeScript yet.
-You'll get an error if you try to run this. Don't worry, we'll handle it soon!
-*/
-
-/*
-CHALLENGE 9: Allow users to filter by the adopted property
-1. Updated `PetQueryParams`
-2. Grab the adopted param from req.query
-3. Filter the filteredPets array based on its value
- 
-Keep in mind that query strings come in strings... 
-but `adopted` should be a boolean... so, what can we do?
-*/
-
-app.get('/', (
-    req: Request<{}, unknown, {}, PetQueryParams>,
-    res: Response<Pet[]>
-): void => {
-    const { species, adopted } = req.query
-
-    let filteredPets: Pet[] = pets
-
-    if (species) {
-        filteredPets = filteredPets.filter((pet: Pet): boolean =>
-            pet.species.toLowerCase() === species.toLowerCase()
-        )
-    }
-
-    if (adopted) {
-        filteredPets = filteredPets.filter((pet: Pet): boolean =>
-            pet.adopted === JSON.parse(adopted)
-        )
-    }
-    res.json(filteredPets)
-})
-
-
-/*
-CHALLENGE 7: Complete the `/:id` route!
-1. Type req, res, and callback's return value
-2. Pull the `id` from the path params
-3. Find the pet that matches said `id`
-4. Send back said pet with `res.json()`
-       
-Don't worry about non-existent IDs or other TypeScript yet
-*/
-app.get('/:id', (req: Request<{ id: string }>, res: Response<Pet | { message: string }>): void => {
-    const { id } = req.params
-    const pet: Pet | undefined = pets.find((pet: Pet): boolean => pet.id.toString() === id)
-    if (pet) {
-        res.json(pet)
-    } else {
-        res.status(404).json({ message: "No pet with that ID" })
-    }
-})
+app.use('/pets', petRouter)
 
 /* 
 CHALLENGE 6 : Create a 404 catch-all after the `/` route
